@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <title>Geosoftware Aufgabe 5</title>
+</head>
+<body>
+
+  <h1>Geosoftware Aufgabe 5</h1>
+
+  <a href="http://localhost:3000/seite2">Favoriten verwalten</a>
+
+  <br><br>
+
+  <form onsubmit="selectPoint();return false">
+    <div id="radioSelectPoint"></div>
+    <input type="submit" value="Punkt auswählen">
+  </form>
+
+  <br>
+  <br>
+
+  <p id="info"> </p>
+
+  <div id="nearest_busstop"></div>
+
+  <div id="busstops"></div>
+
+  <div id="mapId" style="width: 600px; height: 400px; margin-left: auto; margin-right: auto;"></div>
+
+</body>
+</html>
+
+<link rel="stylesheet" href="/leaflet/leaflet.css"/>
+<script src= "/leaflet/leaflet.js"></script>
+<script src="/public/scriptSeite1.js"></script>

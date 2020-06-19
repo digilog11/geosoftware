@@ -1,35 +1,75 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <title>Geosoftware Aufgabe 5</title>
+  <title>Geosoftware Aufgabe 6</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <link rel="stylesheet" href="/css/bootstrap.css">
 </head>
 <body>
 
-  <h1>Geosoftware Aufgabe 5</h1>
+<header class="container-fluid bg-primary">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <button type="button" class="navbar-toggler hidden-sm-up" data-toggle="collapse" data-target="#navCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navCollapse">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="navbar-brand" href="http://localhost:3000">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="navbar-brand" href="http://localhost:3000/seite2">Favoriten verwalten</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
 
-  <a href="http://localhost:3000/seite2">Favoriten verwalten</a>
+<main role="main" class="container">
 
   <br><br>
 
   <form onsubmit="selectPoint();return false">
     <div id="radioSelectPoint"></div>
-    <input type="submit" value="Punkt auswählen">
+    <br>
+    <input type="submit" class="btn btn-primary" value="Punkt auswählen">
   </form>
 
   <br>
   <br>
 
-  <p id="info"> </p>
-
   <div id="nearest_busstop"></div>
 
   <div id="busstops"></div>
 
-  <div id="mapId" style="width: 600px; height: 400px; margin-left: auto; margin-right: auto;"></div>
+</main>
+
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6" id="mapContainer"></div>
+  <div class="col-md-3"></div>
+</div>
+
+
+<footer class="page-footer mt-5 text-white">
+  <div class="container-fluid bg-primary">
+    <div class="col pt-3 pb-2 text-right">
+      <h3> Impressum </h3>
+      <p> Vorname Nachname </p>
+      <p> E-Mail </p>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
 
+<script src= "/jquery/jquery.js"></script>
+<script src= "/popper/popper.js"></script>
+<script src= "/bootstrap/bootstrap.js"></script>
+
 <link rel="stylesheet" href="/leaflet/leaflet.css"/>
 <script src= "/leaflet/leaflet.js"></script>
+<script src= "/leaflet-heat/leaflet-heat.js"></script>
 <script src="/public/scriptSeite1.js"></script>

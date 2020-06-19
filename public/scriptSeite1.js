@@ -54,7 +54,7 @@ function toMinutes (seconds) {
  * @return {number} - rounded number
  */
 function round3 (num) {
-  return (Math.round(num * (Math.pow(10,3)))) * Math.pow(10, -3);
+  return Number(Math.round(num+'e'+3)+'e-'+3);
 }
 
 /**
@@ -205,7 +205,7 @@ function Ride (departure_time, delay, line, destination) {
 
 /**
  * uses the response from the requestJSON function to create an array of Busstop objects, sorts the array
- * and displays it in the html doc, also requests the busrides at the nearest busstop in the next 20 minutes
+ * and displays it in the html doc as map and table, also requests the busrides at the nearest busstop in the next 20 minutes
  * @param {object} request - XMLHttpRequest
  * @param {array} point - used to calculate distance and direction between point and busstops
  */
@@ -234,17 +234,30 @@ function displayBusstops (request, point) {
   // write the sorted array into the html doc
   for (var i = 1; i < 5; i++){
      document.getElementById("busstops").innerHTML +=
-       "<p>" + "<b>" + "Bushaltestelle: " + "</b>" + sortedBusstops[i].name + "<br>" +
-       "<b>" + "Distanz zum Standort: " + "</b>" + sortedBusstops[i].distance + " km" + "<br>" +
-       "<b>" + "Himmelsrichtung: " + "</b>" + sortedBusstops[i].direction + "</p>" ;
+       "<div class='container bg-primary py-2 text-white'>" +
+       "<div class='row'>" +
+       "<div class='col-md-4'>" +
+       "<b>" + "Bushaltestelle: " + "</b>" + sortedBusstops[i].name + "</div>" +
+       "<div class='col-md-4'>" +
+       "<b>" + "Distanz: " + "</b>" + sortedBusstops[i].distance + " km" + "</div>" +
+       "<div class='col-md-4'>" +
+       "<b>" + "Himmelsrichtung: " + "</b>" + sortedBusstops[i].direction + "</div>" +
+       "</div>" + "</div>" +
+       "<div class='col'style='height: 10px;'></div>";
   }
+
+  // create baselayer
+  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:18,
+    attribution: 'Leaflet, OpenStreetMap Contributors',
+    });
+
+  // empty map div in case it has already been initialized
+  document.getElementById("mapContainer").innerHTML ="<div id='mapId' style='height: 400px;'></div>";
 
   // create a Leaflet map, center is position of user
   var map = L.map('mapId').setView([point.lat,point.lon],15);
-     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-       maxZoom:18,
-       attribution: 'Leaflet, OpenStreetMap Contributors',
-   }).addTo(map);
+  osm.addTo(map);
 
   // add a marker at the position of user
   L.marker([point.lat,point.lon]).addTo(map).bindPopup("Dein Standort").openPopup();
@@ -257,6 +270,21 @@ function displayBusstops (request, point) {
        "<b>" + "Distanz zum Standort: " + "</b>" + sortedBusstops[i].distance + " km" + "<br>" +
        "<b>" + "Himmelsrichtung: " + "</b>" + sortedBusstops[i].direction + "</p>" );
  }
+
+ // create array of heatPoints
+ var heatPoints = [];
+ // fill it with all the busstops
+ for (var i = 0; i < sortedBusstops.length; i++){
+   heatPoints[i] = [sortedBusstops[i].coordinates[1],sortedBusstops[i].coordinates[0],1]
+ }
+ // create new Layer on map with heatpoints
+ var heat = L.heatLayer(heatPoints, {radius:50});
+ // group osm and heat into one layer
+ var osmHeat = L.layerGroup([osm, heat]);
+
+ // add layer control
+ var overlayMaps = {"Heatmap": osmHeat, "Basemap": osm};
+ L.control.layers(overlayMaps).addTo(map);
 }
 
 /**
@@ -281,26 +309,37 @@ function displayNearestBusstop (request, sortedBusstops) {
 
   sortByTime(sortedRides);
 
-  // write explanation of colour-coding
-  document.getElementById("info").innerHTML =
-    "Bushaltestellen werden in schwarz angezeigt, Fahrten in blau";
-
   // write the nearest busstop into the html doc
   document.getElementById("nearest_busstop").innerHTML +=
-    "<p>" + "<b>" + "Bushaltestelle: " + "</b>" + sortedBusstops[0].name + "<br>" +
-    "<b>" + "Distanz: " + "</b>" + sortedBusstops[0].distance + " km" + "<br>" +
-    "<b>" + "Himmelsrichtung: " + "</b>" + sortedBusstops[0].direction + "</p>";
+    "<div class='container bg-primary py-2 text-white'>" +
+    "<div class='row'>" +
+    "<div class='col-md-4'>" +
+    "<b>" + "Bushaltestelle: " + "</b>" + sortedBusstops[0].name + "</div>" +
+    "<div class='col-md-4'>" +
+    "<b>" + "Distanz: " + "</b>" + sortedBusstops[0].distance + " km" + "</div>" +
+    "<div class='col-md-4'>" +
+    "<b>" + "Himmelsrichtung: " + "</b>" + sortedBusstops[0].direction + "</div>" +
+    "</div>" + "</div>" +
+    "<div class='col'style='height: 10px;'></div>";
 
   // write the busrides at the nearest busstop into the html doc
   if (rides.length == 0) {
-    document.getElementById("nearest_busstop").innerHTML += "<p style='color:blue;'>" + "Keine Fahrten in den nächsten 5 Minuten" + "</p>";
+    document.getElementById("nearest_busstop").innerHTML += "<p> Keine Fahrten in den nächsten 5 Minuten </p>";
   }else{
     for (var i = 0; i < sortedRides.length; i++){
       document.getElementById("nearest_busstop").innerHTML +=
-      "<p style='color:blue;'>" + "<b>" + "Abfahrtszeit: " + "</b>" + toReadableTime(sortedRides[i].departure_time) + "<br>" +
-      "<b>" + "Verspätung: " + "</b>" + toMinutes(sortedRides[i].delay) + "<br>" +
-      "<b>" + "Linie: " + "</b>" + sortedRides[i].line + "<br>" +
-      "<b>" + "Richtung: " + "</b>" + sortedRides[i].destination + "</p>";
+      "<div class='container bg-danger py-2 text-white'>" +
+      "<div class='row'>" +
+      "<div class='col-md-3'>" +
+      "<b>" + "Abfahrtszeit: " + "</b>" + toReadableTime(sortedRides[i].departure_time) + "</div>" +
+      "<div class='col-md-3'>" +
+      "<b>" + "Verspätung: " + "</b>" + toMinutes(sortedRides[i].delay) + "</div>" +
+      "<div class='col-md-2'>" +
+      "<b>" + "Linie: " + "</b>" + sortedRides[i].line + "</div>" +
+      "<div class='col-md-4'>" +
+      "<b>" + "Richtung: " + "</b>" + sortedRides[i].destination + "</div>" +
+      "</div>" + "</div>" +
+      "<div class='col'style='height: 10px;'></div>";
     }
   }
 }
@@ -342,11 +381,12 @@ function displayNearestBusstop (request, sortedBusstops) {
  function loadPoints (request) {
    var points = JSON.parse(request.response);
 
-   // for each point create a radio button
    for(var i = 0; i < points.length; i++){
-     document.getElementById("radioSelectPoint").innerHTML +=
-       "<input type = 'radio' name = 'point' value =" + points[i].lon + " id =" + points[i].lat + ">" +
-       "<label for = " + points[i]._id + ">" + "lon: " + points[i].lon + ", lat: " + points[i].lat + " </label><br>";
+      document.getElementById("radioSelectPoint").innerHTML +=
+       "<div class='form-check'>" +
+       "<input type = 'radio' class = 'form-check-input' name = 'point' value =" + points[i].lon + " id =" + points[i].lat + ">" +
+       "<label class = 'form-check-label'>" + "lon: " + points[i].lon + ", lat: " + points[i].lat + ",<span class='text-muted'> id: " + points[i]._id + "</span> </label>" +
+       "</div>";
    }
  }
 

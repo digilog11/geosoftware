@@ -81,7 +81,7 @@ function sendAddedPointToServer(obj){
 
 /**
  * sends obj to "/pointDeleted" via POST-Request
- * @param {object} obj - geoJSON point
+ * @param {object} obj - point {_id}
  */
 function sendDeletedPointToServer(obj){
   var xhr = new window.XMLHttpRequest();
@@ -114,7 +114,8 @@ function submitPoint(){
  */
 function deletePoint(){
   var x = document.getElementById("delete_point").value;
-  sendDeletedPointToServer(x);
+  var obj ={'_id': x};
+  sendDeletedPointToServer(JSON.stringify(obj));
 }
 
 /**

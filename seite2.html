@@ -1,71 +1,135 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <title>Geosoftware Aufgabe 5</title>
+  <title>Geosoftware Aufgabe 6</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <link rel="stylesheet" href="/css/bootstrap.css">
 </head>
 <body>
 
-  <h1>Geosoftware Aufgabe 5</h1>
+<header class="container-fluid bg-primary">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <button type="button" class="navbar-toggler hidden-sm-up" data-toggle="collapse" data-target="#navCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navCollapse">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="navbar-brand" href="http://localhost:3000">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="navbar-brand" href="http://localhost:3000/seite2">Favoriten verwalten</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main role="main" class="container">
+
+  <div class="container-fluid mt-5 mb-3">
+    <h2 class="text-center"> Punkt zu Favoriten hinzufügen </h2>
+  </div>
 
   <div>
 
-    <h2 style="color:blue"> Punkt zu Favoriten hinzufügen </h2>
-
     <div>
-
-      <h3> Punkt erstellen mit Leaflet-draw </h3>
-      <div  id="mapId" style="width: 700px; height: 400px;"></div>
-      <br>
-      <button type="toGeoJSON_button" onclick="leafletToGeoJSON()"> Zu GeoJSON konvertieren </button>
-      <p id="adress_Leaflet_error" style="color:red;"></p>
-      <br>
-      <textarea  id="l_point" rows="2" cols="100"></textarea>
-      <br>
-      <button type="submitLPoint_button" onclick="submitLPoint()">Zu Favoriten hinzufügen</button>
-
+      <div class="form-group">
+        <div class="text-center">
+          <label for="input_address"> Punkt erstellen mit Leaflet-draw </label>
+        </div>
+      </div>
     </div>
-    <div>
+  </div>
+</main>
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-6" id="mapId" style="height: 400px;"></div>
+          <div class="col-md-3"></div>
+        </div>
+<main role="main" class="container">
+  <div>
 
-      <h3> Punkt erstellen durch Adresseingabe </h3>
-      <textarea id="input_address" rows="2" cols="100"> </textarea>
-      <br>
-      <button type="submitAddress_button" onclick="submitAddress()" > Punkt zu Favoriten hinzufügen </button>
+    <div>
+      <div class="form-group">
+        <div class="text-center mt-2">
+          <button type="toGeoJSON_button" class="btn btn-primary" onclick="leafletToGeoJSON()"> Zu GeoJSON konvertieren </button>
+        </div>
+        <p id="adress_Leaflet_error" style="color:red;"></p>
+        <textarea class="form-control" id="l_point" rows="2"> </textarea>
+      </div>
+      <button type="submitLPoint_button" class="btn btn-primary" onclick="submitLPoint()">Zu Favoriten hinzufügen</button>
+    </div>
+
+    <hr class="my-3"/>
+
+    <div>
+      <div class="form-group">
+        <label for="input_address"> Punkt erstellen durch Adresseingabe </label>
+        <textarea class="form-control" id="input_address" rows="2"> </textarea>
+      </div>
+      <button type="submitAddress_button" class="btn btn-primary" onclick="submitAddress()" > Punkt zu Favoriten hinzufügen </button>
       <p id="address_error" style="color:red;"></p>
-
     </div>
+
+    <hr class="my-3"/>
+
     <div>
+      <div class="form-group">
+        <label for="input_point"> Punkt erstellen mit eigenem Standort oder mit Direkteingabe eines GeoJSON-Punktes </label>
+        <textarea class="form-control" id="input_point" rows="2"> </textarea>
+      </div>
+      <button type="loadLocation_button" class="btn btn-primary" onclick="loadCurrentPosition()" > Aktuellen Standort laden </button>
+      <button type="submitPoint_button" class="btn btn-primary" onclick="submitPoint()" > Zu Favoriten hinzufügen </button>
+    </div>
 
-      <h3> Punkt erstellen mit eigenem Standort oder mit Direkteingabe eines GeoJSON-Punktes</h3>
-      <textarea id="input_point" rows="2" cols="100"> </textarea>
-      <br>
-      <button type="loadLocation_button" onclick="loadCurrentPosition()" > Aktuellen Standort laden </button>
-      <button type="submitPoint_button" onclick="submitPoint()" > Zu Favoriten hinzufügen </button>
+  </div>
 
+  <div class="container-fluid mt-5 mb-3">
+    <h2 class="text-center"> Punkt von Favoriten löschen </h2>
+  </div>
+
+  <div>
+    <div class="form-group">
+      <label for="input_address"> Gebe die id eines Punktes ein, um ihn zu löschen (ohne "id:", aufpassen, dass kein Leerzeichen vorne) </label>
+      <textarea class="form-control" id="delete_point" rows="2"> </textarea>
+    </div>
+    <button type="deletePoint_button" class="btn btn-primary" onclick="deletePoint()" > Von Favoriten löschen </button>
+  </div>
+
+  <div class="container-fluid mt-5 mb-3">
+    <h2 class="text-center"> Punkt aus Favoriten bearbeiten </h2>
+  </div>
+
+  <div>
+    <div class="form-group">
+      <label for="original_point"> Gebe den ursprünglichen Punkt im GeoJSON-Format ein </label>
+      <textarea class="form-control" id="original_point" rows="2"> </textarea>
+      <label for="update_point"> Gebe den neuen Punkt mit deiner Veränderung im GeoJSON-Format ein </label>
+      <textarea class="form-control" id="update_point" rows="2"> </textarea>
+    </div>
+    <button type="updatePoint_button" class="btn btn-primary" onclick="updatePoint()" > Favoriten updaten </button>
+  </div>
+
+</main>
+
+<footer class="page-footer mt-5 text-white">
+  <div class="container-fluid bg-primary">
+    <div class="col pt-3 pb-2 text-right">
+      <h3> Impressum </h3>
+      <p> Vorname Nachname </p>
+      <p> E-Mail </p>
     </div>
   </div>
-  <div>
-
-    <h2 style="color:blue"> Punkt von Favoriten löschen </h2>
-    <p>Gebe einen Punkt im GeoJSON-Format ein um ihn zu köschen</p>
-    <textarea id="delete_point" rows="2" cols="100"> </textarea>
-    <br>
-    <button type="deletePoint_button" onclick="deletePoint()" > Von Favoriten löschen </button>
-
-  </div>
-  <div>
-
-    <h2 style="color:blue"> Punkt aus Favoriten bearbeiten </h2>
-    <p>Gebe den ursprünglichen Punkt im GeoJSON-Format ein</p>
-    <textarea id="original_point" rows="2" cols="100"> </textarea>
-    <p>Gebe den neuen Punkt mit deiner Veränderung im GeoJSON-Format ein</p>
-    <textarea id="update_point" rows="2" cols="100"> </textarea>
-    <br>
-    <button type="updatePoint_button" onclick="updatePoint()" > Favoriten updaten </button>
-
-</div>
+</footer>
 
 </body>
 </html>
+
+<script src= "/jquery/jquery.js"></script>
+<script src= "/popper/popper.js"></script>
+<script src= "/bootstrap/bootstrap.js"></script>
 
 <link rel="stylesheet" href="/leaflet/leaflet.css"/>
 <link rel="stylesheet" href="/leaflet-draw/leaflet.draw.css"/>

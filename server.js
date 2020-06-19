@@ -55,7 +55,7 @@ function insertPointMongo (obj) {
 
 /**
  * deletes a document from the MongoDB collection points
- * @param {object} obj - point {lon, lat}
+ * @param {object} obj - point {'_id': ObjectID}
  */
 function deletePointMongo (obj) {
   app.locals.db.collection("points").deleteOne(obj, (error, result) => {
@@ -90,6 +90,21 @@ app.use("/leaflet", express.static(__dirname + "/node_modules/leaflet/dist"));
 // Make leaflet-Draw library available over localhost:3000/leaflet-draw
 app.use("/leaflet-draw", express.static(__dirname + "/node_modules/leaflet-draw/dist"));
 
+// Make leaflet-Heat library available over localhost:3000/leaflet-heat
+app.use("/leaflet-heat", express.static(__dirname + "/node_modules/leaflet.heat/dist"));
+
+// Make jQuery available over localhost:3000/jquery
+app.use("/jquery", express.static(__dirname + "/node_modules/jquery/dist"));
+
+// Make popper available over localhost:3000/popper
+app.use("/popper", express.static(__dirname + "/node_modules/@popperjs/core/dist/umd"));
+
+// Make Bootstrap jQuery plugins available over localhost:3000/bootstrap
+app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
+
+// Make Bootstrap's css available over localhost:3000/css
+app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
+
 // Send seite1.html on request to "/"
 app.get("/", (req,res) => {
   res.sendFile(__dirname + "/seite1.html")
@@ -114,9 +129,7 @@ app.post("/pointAdded", (req,res) => {
 // deletePointMongo()
 app.post("/pointDeleted", (req,res) => {
   var x = req.body;
-  var lon = x.coordinates[0];
-  var lat = x.coordinates[1];
-  var obj = {lon, lat};
+  var obj = {"_id": new mongodb.ObjectID(x._id)};
   deletePointMongo(obj);
 })
 

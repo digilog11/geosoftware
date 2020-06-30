@@ -4,7 +4,7 @@ In der Eingabeaufforderung erstelle einen Ordner, gehe in den Ordner ein, gib de
 In der Datei package.json ändere die Eingaben so, dass dort steht
 
 {
-  "name": "geosoft5",
+  "name": DEIN ORDNER,
   "version": "1.0.0",
   "description": "",
   "main": "server.js",

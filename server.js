@@ -17,7 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 async function connectMongoDB() {
   try{
     // connect to database server
-    app.locals.dbConnection = await mongodb.MongoClient.connect("mongodb://localhost:27017", {useNewUrlParser: true});
+    app.locals.dbConnection = await mongodb.MongoClient.connect("mongodb://localhost:27017",
+    {useUnifiedTopology: true, useNewUrlParser: true});
     // connect do database "geosoft"
     app.locals.db = await app.locals.dbConnection.db("geosoft");
     console.log("Using db: " + app.locals.db.databaseName);
@@ -84,6 +85,9 @@ function updatePointMongo (oldP, newP){
 // Make all Files stored in Folder "public" accessible over localhost:3000/public
 app.use("/public", express.static(__dirname + "/public"));
 
+// Make all Files stored in Folder "test" accessible over localhost:3000/test
+app.use("/test", express.static(__dirname + "/test"));
+
 // Make leaflet library available over localhost:3000/leaflet
 app.use("/leaflet", express.static(__dirname + "/node_modules/leaflet/dist"));
 
@@ -105,6 +109,9 @@ app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist/j
 // Make Bootstrap's css available over localhost:3000/css
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
 
+// Make qunit lib available over localhost:3000/qunit
+app.use("/qunit", express.static(__dirname + "/node_modules/qunit/qunit"));
+
 // Send seite1.html on request to "/"
 app.get("/", (req,res) => {
   res.sendFile(__dirname + "/seite1.html")
@@ -113,6 +120,11 @@ app.get("/", (req,res) => {
 // Send seite2.html on request to "/seite2"
 app.get("/seite2", (req,res) => {
   res.sendFile(__dirname + "/seite2.html")
+});
+
+// Send test.html on request to "/test"
+app.get("/qunitTest", (req,res) => {
+  res.sendFile(__dirname + "/test/test.html")
 });
 
 // takes request body from pointAdded-Post-Request and gives it on to function
